@@ -33,3 +33,17 @@ export const FindVideoTutorialsOutputSchema = z.array(
   })
 );
 export type FindVideoTutorialsOutput = z.infer<typeof FindVideoTutorialsOutputSchema>;
+
+// Schemas for SuggestMealsFlow
+export const SuggestMealsInputSchema = z.object({
+  ingredients: z.string().describe('A comma-separated string of ingredients the user has.'),
+});
+
+export const SuggestMealsOutputSchema = z.object({
+  suggestions: z.array(
+    z.object({
+      name: z.string().describe('The name of the suggested meal.'),
+      description: z.string().optional().describe('A brief 1-2 sentence description of the meal, highlighting how it uses the provided ingredients.'),
+    })
+  ).describe('A list of 3-5 meal suggestions.'),
+});
