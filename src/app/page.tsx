@@ -4,12 +4,13 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link'; // Added Link
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles, ChefHat } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
 import CuisineSelector from '@/components/cuisine-crafter/CuisineSelector';
+import DishNameInput from '@/components/cuisine-crafter/DishNameInput';
 import IngredientInput from '@/components/cuisine-crafter/IngredientInput';
 import RecipeDisplay from '@/components/cuisine-crafter/RecipeDisplay';
 import { handleGenerateRecipeAction } from '@/app/actions';
@@ -17,6 +18,7 @@ import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe';
 
 export default function CuisineCrafterPage() {
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
+  const [dishName, setDishName] = useState<string>('');
   const [ingredients, setIngredients] = useState<string>('');
   const [recipe, setRecipe] = useState<GenerateRecipeOutput | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -25,14 +27,18 @@ export default function CuisineCrafterPage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true); // Ensure client-side only logic runs after mount to avoid hydration issues
+    setMounted(true); 
   }, []);
 
 
   const handleCuisineSelect = (cuisineName: string) => {
     setSelectedCuisine(cuisineName);
-    setRecipe(null); // Clear previous recipe when new cuisine is selected
+    setRecipe(null); 
     setError(null);
+  };
+
+  const handleDishNameChange = (newDishName: string) => {
+    setDishName(newDishName);
   };
 
   const handleIngredientsChange = (newIngredients: string) => {
@@ -51,10 +57,10 @@ export default function CuisineCrafterPage() {
     }
     setIsLoading(true);
     setError(null);
-    setRecipe(null); // Clear previous recipe before fetching new one
+    setRecipe(null); 
 
     try {
-      const result = await handleGenerateRecipeAction({ cuisine: selectedCuisine, ingredients });
+      const result = await handleGenerateRecipeAction({ cuisine: selectedCuisine, dishName, ingredients });
       setRecipe(result);
       toast({
         title: "Recipe Generated!",
@@ -74,8 +80,6 @@ export default function CuisineCrafterPage() {
   };
 
   if (!mounted) {
-    // Render a simple loading state or null during server-side rendering & before hydration
-    // This helps prevent hydration mismatches with components that rely on client-side state/hooks
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -116,6 +120,11 @@ export default function CuisineCrafterPage() {
             onCuisineSelect={handleCuisineSelect}
           />
 
+          <DishNameInput
+            dishName={dishName}
+            onDishNameChange={handleDishNameChange}
+          />
+
           <IngredientInput
             ingredients={ingredients}
             onIngredientsChange={handleIngredientsChange}
@@ -154,4 +163,3 @@ export default function CuisineCrafterPage() {
     </div>
   );
 }
-
