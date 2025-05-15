@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles, ChefHat } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { cn } from '@/lib/utils'; // Import cn for conditional classes
 
 import CuisineSelector from '@/components/cuisine-crafter/CuisineSelector';
 import DishNameInput from '@/components/cuisine-crafter/DishNameInput';
@@ -100,6 +101,8 @@ export default function CuisineCrafterPage() {
 
   const handleSuggestionClick = (mealName: string) => {
     setDishName(mealName);
+    // Optionally clear meal suggestions after one is picked, or keep them visible
+    // setMealSuggestions(null); 
     toast({
       title: "Dish Name Updated",
       description: `"${mealName}" is now set as the dish to get a recipe for.`,
@@ -194,6 +197,7 @@ export default function CuisineCrafterPage() {
             isLoading={isSuggestingMeals}
             error={suggestionsError}
             onSuggestionClick={handleSuggestionClick}
+            selectedDishName={dishName} // Pass current dishName to highlight
           />
 
 
@@ -230,3 +234,4 @@ export default function CuisineCrafterPage() {
     </div>
   );
 }
+

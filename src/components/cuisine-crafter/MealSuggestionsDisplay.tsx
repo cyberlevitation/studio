@@ -4,16 +4,17 @@
 
 import type { FC } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Lightbulb, Zap } from 'lucide-react';
-import type { SuggestMealsOutput } from '@/app/actions'; // Updated import path
+import { AlertCircle, Lightbulb, Zap, CheckSquare } from 'lucide-react';
+import type { SuggestMealsOutput } from '@/app/actions'; 
+import { cn } from '@/lib/utils';
 
 interface MealSuggestionsDisplayProps {
   suggestions: SuggestMealsOutput['suggestions'] | null;
   isLoading: boolean;
   error: string | null;
   onSuggestionClick: (mealName: string) => void;
+  selectedDishName?: string | null; // To identify the currently selected suggestion
 }
 
 const MealSuggestionsDisplay: FC<MealSuggestionsDisplayProps> = ({
@@ -21,6 +22,7 @@ const MealSuggestionsDisplay: FC<MealSuggestionsDisplayProps> = ({
   isLoading,
   error,
   onSuggestionClick,
+  selectedDishName,
 }) => {
   if (isLoading) {
     return (
@@ -57,9 +59,6 @@ const MealSuggestionsDisplay: FC<MealSuggestionsDisplayProps> = ({
   }
 
   if (!suggestions || suggestions.length === 0) {
-    // Don't display anything if there are no suggestions and not loading/error
-    // This could be a specific message if explicitly no suggestions were found.
-    // For now, keeping it clean.
     return null;
   }
 
@@ -70,32 +69,51 @@ const MealSuggestionsDisplay: FC<MealSuggestionsDisplayProps> = ({
           <Lightbulb className="w-7 h-7 mr-2 text-yellow-500" />
           Meal Ideas
         </CardTitle>
-        <CardDescription>Here are some meal ideas based on your ingredients. Click one to get a recipe!</CardDescription>
+        <CardDescription>Here are some meal ideas based on your ingredients. Click one to use it for recipe generation!</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {suggestions.map((suggestion, index) => (
-          <Card
-            key={index}
-            className="p-4 hover:shadow-md transition-shadow cursor-pointer bg-background rounded-lg"
-            onClick={() => onSuggestionClick(suggestion.name)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                onSuggestionClick(suggestion.name);
-              }
-            }}
-            tabIndex={0}
-            role="button"
-            aria-label={`Select ${suggestion.name} as dish`}
-          >
-            <h4 className="font-semibold text-lg text-primary flex items-center">
-               <Zap size={18} className="mr-2 text-primary/80" /> {suggestion.name}
-            </h4>
-            {suggestion.description && <p className="text-sm text-muted-foreground mt-1">{suggestion.description}</p>}
-          </Card>
-        ))}
+        {suggestions.map((suggestion, index) => {
+          const isSelected = suggestion.name === selectedDishName;
+          return (
+            <Card
+              key={index}
+              className={cn(
+                'p-4 hover:shadow-md transition-all duration-200 cursor-pointer bg-background rounded-lg border-2',
+                isSelected ? 'border-primary ring-2 ring-primary shadow-lg' : 'border-transparent hover:border-primary/50',
+              )}
+              onClick={() => onSuggestionClick(suggestion.name)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  onSuggestionClick(suggestion.name);
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-pressed={isSelected}
+              aria-label={`Select ${suggestion.name} as dish`}
+            >
+              <div className="flex items-center justify-between">
+                <h4 className={cn(
+                    "font-semibold text-lg flex items-center",
+                    isSelected ? "text-primary" : "text-foreground"
+                )}>
+                  {isSelected ? <CheckSquare size={20} className="mr-2 text-primary" /> : <Zap size={18} className="mr-2 text-primary/80" />} 
+                  {suggestion.name}
+                </h4>
+                {/* Optional: Add a visual cue on the right if selected */}
+                {/* {isSelected && <CheckCircle2 className="w-5 h-5 text-primary" />} */}
+              </div>
+              {suggestion.description && <p className={cn(
+                  "text-sm mt-1",
+                  isSelected ? "text-muted-foreground" : "text-muted-foreground"
+              )}>{suggestion.description}</p>}
+            </Card>
+          );
+        })}
       </CardContent>
     </Card>
   );
 };
 
 export default MealSuggestionsDisplay;
+

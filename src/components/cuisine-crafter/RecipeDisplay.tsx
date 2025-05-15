@@ -6,7 +6,7 @@ import type { FC } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, CheckCircle2, Store, Youtube, ExternalLink } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Store, Youtube, ExternalLink, ShoppingBasket, ListChecks } from 'lucide-react';
 import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe';
 import { Button } from '@/components/ui/button';
 
@@ -25,14 +25,19 @@ const RecipeDisplay: FC<RecipeDisplayProps> = ({ recipe, isLoading, error }) => 
           <Skeleton className="h-4 w-1/2" />
         </CardHeader>
         <CardContent className="space-y-4">
+          <Skeleton className="h-6 w-1/3 mb-2" /> {/* For Ingredients title */}
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-5/6" />
+          <Skeleton className="h-5 w-full" />
+          
+          <Skeleton className="h-6 w-1/3 mt-4 mb-2" /> {/* For Instructions title */}
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-5/6" />
           <Skeleton className="h-6 w-full" />
-          <Skeleton className="h-8 w-1/3 mt-4" />
+
+          <Skeleton className="h-8 w-1/3 mt-4" /> {/* For restaurant/video titles */}
           <Skeleton className="h-6 w-full" />
-          <Skeleton className="h-6 w-full" />
-          <Skeleton className="h-8 w-1/3 mt-4" />
           <Skeleton className="h-6 w-full" />
         </CardContent>
       </Card>
@@ -66,6 +71,7 @@ const RecipeDisplay: FC<RecipeDisplayProps> = ({ recipe, isLoading, error }) => 
 
   const hasRestaurantLinks = recipe.restaurantLinks && recipe.restaurantLinks.length > 0;
   const hasVideoTutorialLinks = recipe.videoTutorialLinks && recipe.videoTutorialLinks.length > 0;
+  const hasIngredients = recipe.ingredients && recipe.ingredients.length > 0;
 
   return (
     <Card className="w-full p-6 shadow-lg rounded-xl bg-gradient-to-br from-card to-accent/10">
@@ -79,14 +85,35 @@ const RecipeDisplay: FC<RecipeDisplayProps> = ({ recipe, isLoading, error }) => 
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <h3 className="text-xl font-semibold mb-3 text-foreground">Instructions:</h3>
-        <ol className="list-decimal list-inside space-y-3 text-foreground/90 mb-8">
-          {recipe.steps.map((step, index) => (
-            <li key={index} className="pl-2 border-l-2 border-accent rounded-r-md py-1 bg-background/50 shadow-sm">
-              {step}
-            </li>
-          ))}
-        </ol>
+        {hasIngredients && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold mb-3 text-foreground flex items-center">
+              <ShoppingBasket className="w-6 h-6 mr-2 text-primary" />
+              Ingredients
+            </h3>
+            <ul className="list-disc list-inside space-y-2 text-foreground/90 pl-2">
+              {recipe.ingredients.map((ingredient, index) => (
+                <li key={index} className="py-1 px-2 bg-background/50 shadow-sm rounded-md">
+                  {ingredient}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div>
+          <h3 className="text-xl font-semibold mb-3 text-foreground flex items-center">
+            <ListChecks className="w-6 h-6 mr-2 text-primary" />
+            Instructions
+          </h3>
+          <ol className="list-decimal list-inside space-y-3 text-foreground/90 mb-8">
+            {recipe.steps.map((step, index) => (
+              <li key={index} className="pl-2 border-l-2 border-accent rounded-r-md py-1 bg-background/50 shadow-sm">
+                {step}
+              </li>
+            ))}
+          </ol>
+        </div>
 
         {hasRestaurantLinks && (
           <div className="mb-8">
@@ -113,7 +140,7 @@ const RecipeDisplay: FC<RecipeDisplayProps> = ({ recipe, isLoading, error }) => 
         {hasVideoTutorialLinks && (
           <div>
             <h3 className="text-xl font-semibold mb-3 text-foreground flex items-center">
-              <Youtube className="w-6 h-6 mr-2 text-red-600" /> {/* Using a more specific color for YouTube */}
+              <Youtube className="w-6 h-6 mr-2 text-red-600" />
               Watch Tutorials
             </h3>
             <div className="space-y-2">
@@ -142,3 +169,4 @@ const RecipeDisplay: FC<RecipeDisplayProps> = ({ recipe, isLoading, error }) => 
 };
 
 export default RecipeDisplay;
+
