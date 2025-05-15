@@ -6,8 +6,8 @@ import BlogPostCard from '@/components/blog/BlogPostCard';
 import { Newspaper } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'CuisineCrafter Blog | Culinary Tips & Recipes',
-  description: 'Explore delicious recipes, cooking tips, and culinary inspiration from the CuisineCrafter blog.',
+  title: 'MamaCook Blog | Culinary Tips & Recipes',
+  description: 'Explore delicious recipes, cooking tips, and culinary inspiration from the MamaCook blog.',
 };
 
 export default function BlogPage() {
@@ -20,7 +20,7 @@ export default function BlogPage() {
           <Newspaper className="w-12 h-12 sm:w-16 sm:h-16 text-primary" />
           <div>
             <h1 className="text-3xl sm:text-5xl font-bold text-primary tracking-tight">
-              CuisineCrafter Blog
+              MamaCook Blog
             </h1>
             <p className="text-md sm:text-lg text-muted-foreground mt-1">
               Culinary Tips, Tricks, and Inspiration
@@ -44,9 +44,9 @@ export default function BlogPage() {
       </main>
 
       <footer className="mt-12 py-8 text-center text-sm text-muted-foreground border-t border-border bg-card">
-        <p>&copy; {new Date().getFullYear()} CuisineCrafter Blog. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} MamaCook Blog. All rights reserved.</p>
         <p>
-          <a href="/" className="text-primary hover:underline">Back to CuisineCrafter Home</a>
+          <a href="/" className="text-primary hover:underline">Back to MamaCook Home</a>
         </p>
       </footer>
     </div>

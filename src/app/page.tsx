@@ -20,7 +20,7 @@ import { handleGenerateRecipeAction, handleSuggestMealsAction } from '@/app/acti
 import type { GenerateRecipeOutput, SuggestMealsOutput } from '@/app/actions';
 
 
-export default function CuisineCrafterPage() {
+export default function MamaCookPage() {
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
   const [dishName, setDishName] = useState<string>('');
   const [ingredients, setIngredients] = useState<string>('');
@@ -155,7 +155,7 @@ export default function CuisineCrafterPage() {
           <ChefHat className="w-16 h-16 text-primary" />
           <div>
             <h1 className="text-4xl sm:text-5xl font-bold text-primary tracking-tight">
-              CuisineCrafter
+              MamaCook
             </h1>
             <p className="text-lg text-muted-foreground mt-1">
               Your AI-Powered Culinary Assistant
@@ -231,7 +231,7 @@ export default function CuisineCrafterPage() {
       </main>
 
       <footer className="mt-12 py-8 text-center text-sm text-muted-foreground border-t border-border bg-card">
-        <p>&copy; {new Date().getFullYear()} CuisineCrafter. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} MamaCook. All rights reserved.</p>
         <p>Powered by Generative AI. Check out our <Link href="/blog" className="text-primary hover:underline">Blog</Link>!</p>
       </footer>
     </div>

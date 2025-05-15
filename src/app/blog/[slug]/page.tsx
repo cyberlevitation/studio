@@ -35,7 +35,7 @@ export async function generateMetadata(
   }
 
   return {
-    title: `${post.title} | CuisineCrafter Blog`,
+    title: `${post.title} | MamaCook Blog`,
     description: post.excerpt,
     openGraph: {
       title: post.title,
@@ -114,9 +114,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         </article>
       </main>
       <footer className="mt-12 py-8 text-center text-sm text-muted-foreground border-t border-border bg-card">
-        <p>&copy; {new Date().getFullYear()} CuisineCrafter Blog. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} MamaCook Blog. All rights reserved.</p>
          <p>
-          <Link href="/blog" className="text-primary hover:underline">More Blog Posts</Link> | <a href="/" className="text-primary hover:underline">CuisineCrafter Home</a>
+          <Link href="/blog" className="text-primary hover:underline">More Blog Posts</Link> | <a href="/" className="text-primary hover:underline">MamaCook Home</a>
         </p>
       </footer>
     </div>

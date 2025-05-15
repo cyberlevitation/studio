@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'CuisineCrafter | AI Recipe Generator',
-  description: 'Generate delicious recipes for any cuisine with AI. Tailor suggestions to your ingredients.',
+  title: 'MamaCook | AI Recipe Generator',
+  description: 'Generate delicious recipes for any cuisine with AI. Tailor suggestions to your ingredients with MamaCook.',
 };
 
 export default function RootLayout({
