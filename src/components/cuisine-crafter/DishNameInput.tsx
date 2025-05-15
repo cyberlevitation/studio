@@ -1,3 +1,4 @@
+
 // @/components/cuisine-crafter/DishNameInput.tsx
 'use client';
 
@@ -9,9 +10,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 interface DishNameInputProps {
   dishName: string;
   onDishNameChange: (dishName: string) => void;
+  suggestedDishNames?: string[];
 }
 
-const DishNameInput: FC<DishNameInputProps> = ({ dishName, onDishNameChange }) => {
+const DishNameInput: FC<DishNameInputProps> = ({ dishName, onDishNameChange, suggestedDishNames }) => {
+  const datalistId = "dishName-datalist";
   return (
     <Card className="p-6 bg-card rounded-xl shadow-lg">
       <CardHeader className="p-0 mb-4">
@@ -19,6 +22,7 @@ const DishNameInput: FC<DishNameInputProps> = ({ dishName, onDishNameChange }) =
         <CardDescription>
           Enter the name of the dish you'd like a recipe for (e.g., "Chicken Alfredo", "Vegetable Stir-fry").
           This helps the AI generate a more specific recipe. Leave blank to let the AI choose based on cuisine.
+          If meal suggestions are available, they will appear as autocomplete options.
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
@@ -29,7 +33,15 @@ const DishNameInput: FC<DishNameInputProps> = ({ dishName, onDishNameChange }) =
           value={dishName}
           onChange={(e) => onDishNameChange(e.target.value)}
           className="focus:ring-primary"
+          list={suggestedDishNames && suggestedDishNames.length > 0 ? datalistId : undefined}
         />
+        {suggestedDishNames && suggestedDishNames.length > 0 && (
+          <datalist id={datalistId}>
+            {suggestedDishNames.map(name => (
+              <option key={name} value={name} />
+            ))}
+          </datalist>
+        )}
       </CardContent>
     </Card>
   );

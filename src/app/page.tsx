@@ -146,6 +146,8 @@ export default function CuisineCrafterPage() {
     );
   }
 
+  const suggestedDishNamesForInput = mealSuggestions?.map(s => s.name);
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground">
       <header className="py-8 px-4 text-center shadow-md bg-card sticky top-0 z-50">
@@ -182,6 +184,7 @@ export default function CuisineCrafterPage() {
           <DishNameInput
             dishName={dishName}
             onDishNameChange={handleDishNameChange}
+            suggestedDishNames={suggestedDishNamesForInput}
           />
 
           <IngredientInput
@@ -234,4 +237,3 @@ export default function CuisineCrafterPage() {
     </div>
   );
 }
-

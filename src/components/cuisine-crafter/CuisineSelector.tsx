@@ -1,3 +1,4 @@
+
 // @/components/cuisine-crafter/CuisineSelector.tsx
 'use client';
 
@@ -48,7 +49,13 @@ const CuisineSelector: FC<CuisineSelectorProps> = ({ selectedCuisine, onCuisineS
           onChange={(e) => setSearchTerm(e.target.value)}
           className="flex-grow"
           aria-label="Filter cuisines"
+          list="cuisine-datalist"
         />
+        <datalist id="cuisine-datalist">
+          {allCuisines.map(cuisine => (
+            <option key={cuisine.id} value={cuisine.name} />
+          ))}
+        </datalist>
         <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as SortOrder)}>
           <SelectTrigger className="w-full sm:w-[180px]" aria-label="Sort cuisines by name">
             <SelectValue placeholder="Sort by..." />
