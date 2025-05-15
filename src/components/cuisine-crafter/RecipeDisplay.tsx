@@ -17,6 +17,27 @@ interface RecipeDisplayProps {
 }
 
 const RecipeDisplay: FC<RecipeDisplayProps> = ({ recipe, isLoading, error }) => {
+  const renderStepWithLinks = (stepText: string) => {
+    const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    // Sanitize URL to prevent javascript: pseudo-protocol or other dangerous URLs
+    const sanitizedHtml = stepText.replace(markdownLinkRegex, (match, text, url) => {
+      let G_URL;
+      try {
+        G_URL = new URL(url); // Use global URL
+        if (!['http:', 'https:', 'mailto:'].includes(G_URL.protocol)) {
+          // If protocol is not safe, render as plain text
+          return match; 
+        }
+      } catch (e) {
+        // Invalid URL, render as plain text
+        return match;
+      }
+      return `<a href="${encodeURI(url)}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">${text}</a>`;
+    });
+    return <span dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
+  };
+
+
   if (isLoading) {
     return (
       <Card className="w-full p-6 shadow-lg rounded-xl">
@@ -109,7 +130,7 @@ const RecipeDisplay: FC<RecipeDisplayProps> = ({ recipe, isLoading, error }) => 
           <ol className="list-decimal list-inside space-y-3 text-foreground/90 mb-8">
             {recipe.steps.map((step, index) => (
               <li key={index} className="pl-2 border-l-2 border-accent rounded-r-md py-1 bg-background/50 shadow-sm">
-                {step}
+                {renderStepWithLinks(step)}
               </li>
             ))}
           </ol>
