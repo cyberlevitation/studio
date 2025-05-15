@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { cuisines as allCuisines, type Cuisine } from '@/lib/cuisines';
-import CuisineCard from './CuisineCard';
+// CuisineCard is no longer used directly here, but kept for potential other uses or if the design changes back.
+// import CuisineCard from './CuisineCard'; 
 import { ListFilter, SortAsc, SortDesc } from 'lucide-react';
 
 interface CuisineSelectorProps {
@@ -49,7 +50,7 @@ const CuisineSelector: FC<CuisineSelectorProps> = ({ selectedCuisine, onCuisineS
           aria-label="Filter cuisines"
         />
         <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as SortOrder)}>
-          <SelectTrigger className="w-full sm:w-[180px]" aria-label="Sort cuisines">
+          <SelectTrigger className="w-full sm:w-[180px]" aria-label="Sort cuisines by name">
             <SelectValue placeholder="Sort by..." />
           </SelectTrigger>
           <SelectContent>
@@ -63,20 +64,35 @@ const CuisineSelector: FC<CuisineSelectorProps> = ({ selectedCuisine, onCuisineS
           </SelectContent>
         </Select>
       </div>
-      {filteredAndSortedCuisines.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {filteredAndSortedCuisines.map((cuisine) => (
-            <CuisineCard
-              key={cuisine.id}
-              cuisine={cuisine}
-              onSelect={onCuisineSelect}
-              isSelected={selectedCuisine === cuisine.name}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="text-center text-muted-foreground">No cuisines match your search. Try a different term!</p>
-      )}
+
+      <Select
+        value={selectedCuisine || ""}
+        onValueChange={(value) => {
+          if (value) {
+            onCuisineSelect(value);
+          }
+        }}
+      >
+        <SelectTrigger className="w-full" aria-label="Select cuisine">
+          <SelectValue placeholder="Select a cuisine..." />
+        </SelectTrigger>
+        <SelectContent>
+          {filteredAndSortedCuisines.length > 0 ? (
+            filteredAndSortedCuisines.map((cuisine) => (
+              <SelectItem key={cuisine.id} value={cuisine.name}>
+                <span className="flex items-center">
+                  <cuisine.icon className="w-4 h-4 mr-2 text-primary/80" />
+                  {cuisine.name}
+                </span>
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem value="no-match" disabled>
+              No cuisines match your search.
+            </SelectItem>
+          )}
+        </SelectContent>
+      </Select>
     </div>
   );
 };
