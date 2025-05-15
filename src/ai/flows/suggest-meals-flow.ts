@@ -23,10 +23,13 @@ const prompt = ai.definePrompt({
   name: 'suggestMealsPrompt',
   input: {schema: SuggestMealsInputSchema},
   output: {schema: SuggestMealsOutputSchema},
-  prompt: `You are a helpful culinary assistant.
+  prompt: `You are a helpful culinary assistant with a focus on suggesting meals suitable for an African audience.
 Based on the following ingredients: {{{ingredients}}}
 
 Suggest a list of 3-5 distinct meals that can be primarily made using these ingredients.
+**Prioritize suggesting African dishes (e.g., Jollof Rice, Tagine, various stews, grilled meats with local spices, Injera-based dishes, etc.) if the ingredients allow.**
+If the ingredients strongly point to a non-African dish, you can include those as well, but aim for at least 1-2 African meal suggestions if feasible.
+
 For each meal, provide a name and a very brief (1-2 sentences) description highlighting how the key ingredients could be used.
 Focus on meals where the provided ingredients play a central role. If the ingredients are too sparse or don't lend themselves to common dishes, it's okay to suggest simpler ideas or state that.
 `,

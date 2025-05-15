@@ -23,7 +23,7 @@ const GenerateRecipeInputSchema = z.object({
   cuisine: z
     .string()
     .optional()
-    .describe('The type of cuisine to generate a recipe for. If not provided, the AI will select a suitable cuisine.'),
+    .describe('The type of cuisine to generate a recipe for. If not provided, the AI will select a suitable cuisine, with a preference for African cuisines if appropriate for other inputs.'),
   dishName: z
     .string()
     .optional()
@@ -53,16 +53,19 @@ const prompt = ai.definePrompt({
   input: {schema: GenerateRecipeInputSchema},
   output: {schema: GenerateRecipeOutputSchema},
   tools: [findLocalRestaurantsTool, findVideoTutorialsTool],
-  prompt: `You are a world-class chef, skilled in creating recipes for any cuisine.
+  prompt: `You are a world-class chef, skilled in creating recipes for any cuisine, with a special emphasis on African cuisines for a primarily African audience.
 
 The user will provide:
-{{#if cuisine}}- A cuisine: {{{cuisine}}}{{else}}- Potentially no specific cuisine. If no cuisine is specified, you should choose a popular and interesting cuisine for the recipe.{{/if}}
+{{#if cuisine}}- A cuisine: {{{cuisine}}}{{else}}- Potentially no specific cuisine. If no cuisine is specified, you should choose a popular and interesting cuisine for the recipe. **Prioritize African cuisines (e.g., Nigerian, Ethiopian, Moroccan, Senegalese, South African, general African) if the ingredients (if provided) or dish name (if provided) are suitable, or if no other strong indicators are present. If African cuisine isn't a good fit, then select another appropriate popular cuisine.**{{/if}}
 {{#if dishName}}- A specific dish name: "{{{dishName}}}"{{/if}}
 {{#if ingredients}}- Optionally, a list of ingredients they have: "{{{ingredients}}}" (these are ingredients the user possesses, try to incorporate them if it makes sense for the dish).{{/if}}
 
 {{#if dishName}}
 Your primary goal is to generate a recipe for "{{{dishName}}}".
-{{#if cuisine}}The recipe should fit the "{{{cuisine}}}" cuisine style. For example, if cuisine is "Italian" and dishName is "Tacos", you should aim for an Italian-inspired taco recipe or clearly state if it's not a good fit and suggest an alternative.{{else}}If no cuisine is specified, choose an appropriate cuisine style for "{{{dishName}}}".{{/if}}
+{{#if cuisine}}The recipe should fit the "{{{cuisine}}}" cuisine style. For example, if cuisine is "Italian" and dishName is "Tacos", you should aim for an Italian-inspired taco recipe or clearly state if it's not a good fit and suggest an alternative.
+{{else}}
+If no cuisine is specified, choose an appropriate cuisine style for "{{{dishName}}}". **Strongly consider if "{{{dishName}}}" is an African dish or could be adapted to an African style. If so, default to an African cuisine.** Otherwise, pick a globally recognized appropriate style.
+{{/if}}
 If ingredients are provided ({{{ingredients}}}), try to incorporate them naturally into the recipe for "{{{dishName}}}".
 The output 'recipeName' should be "{{{dishName}}}" or a very close variation if appropriate (e.g., "Classic {{{dishName}}}"{{#if cuisine}}, or "{{{cuisine}}}-style {{{dishName}}}"{{/if}}).
 {{else}}
@@ -70,7 +73,7 @@ The output 'recipeName' should be "{{{dishName}}}" or a very close variation if 
 {{#if cuisine}}
 Generate a suitable and popular recipe for the selected "{{{cuisine}}}" cuisine.
 {{else}}
-Generate a suitable and popular recipe. Since no cuisine was specified, feel free to pick any cuisine that offers delightful and accessible dishes.
+Generate a suitable and popular recipe. **Since no cuisine was specified, prioritize suggesting a dish from an African cuisine (e.g., Jollof Rice, Tagine, Injera with Doro Wat, Bunny Chow, etc.).** If the provided ingredients (if any) strongly point to a non-African dish, you may select another popular cuisine.
 {{/if}}
 If ingredients are provided ({{{ingredients}}}), use them to tailor the recipe.
 The output 'recipeName' should be the name of the dish you generate.
