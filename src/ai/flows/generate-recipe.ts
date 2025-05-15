@@ -20,7 +20,10 @@ import {
 } from '@/ai/schemas/shared-tool-schemas';
 
 const GenerateRecipeInputSchema = z.object({
-  cuisine: z.string().describe('The type of cuisine to generate a recipe for.'),
+  cuisine: z
+    .string()
+    .optional()
+    .describe('The type of cuisine to generate a recipe for. If not provided, the AI will select a suitable cuisine.'),
   dishName: z
     .string()
     .optional()
@@ -52,17 +55,22 @@ const prompt = ai.definePrompt({
   prompt: `You are a world-class chef, skilled in creating recipes for any cuisine.
 
 The user will provide:
-- A cuisine: {{{cuisine}}}
+{{#if cuisine}}- A cuisine: {{{cuisine}}}{{else}}- Potentially no specific cuisine. If no cuisine is specified, you should choose a popular and interesting cuisine for the recipe.{{/if}}
 {{#if dishName}}- A specific dish name: "{{{dishName}}}"{{/if}}
 {{#if ingredients}}- Optionally, a list of ingredients: "{{{ingredients}}}"{{/if}}
 
 {{#if dishName}}
 Your primary goal is to generate a recipe for "{{{dishName}}}".
-The recipe should fit the "{{{cuisine}}}" cuisine style. For example, if cuisine is "Italian" and dishName is "Tacos", you should aim for an Italian-inspired taco recipe or clearly state if it's not a good fit and suggest an alternative.
+{{#if cuisine}}The recipe should fit the "{{{cuisine}}}" cuisine style. For example, if cuisine is "Italian" and dishName is "Tacos", you should aim for an Italian-inspired taco recipe or clearly state if it's not a good fit and suggest an alternative.{{else}}If no cuisine is specified, choose an appropriate cuisine style for "{{{dishName}}}".{{/if}}
 If ingredients are provided ({{{ingredients}}}), try to incorporate them naturally into the recipe for "{{{dishName}}}".
-The output 'recipeName' should be "{{{dishName}}}" or a very close variation if appropriate (e.g., "Classic {{{dishName}}}", or "{{{cuisine}}}-style {{{dishName}}}").
+The output 'recipeName' should be "{{{dishName}}}" or a very close variation if appropriate (e.g., "Classic {{{dishName}}}"{{#if cuisine}}, or "{{{cuisine}}}-style {{{dishName}}}"{{/if}}).
 {{else}}
+{{! This is the case where dishName is NOT provided }}
+{{#if cuisine}}
 Generate a suitable and popular recipe for the selected "{{{cuisine}}}" cuisine.
+{{else}}
+Generate a suitable and popular recipe. Since no cuisine was specified, feel free to pick any cuisine that offers delightful and accessible dishes.
+{{/if}}
 If ingredients are provided ({{{ingredients}}}), use them to tailor the recipe.
 The output 'recipeName' should be the name of the dish you generate.
 {{/if}}

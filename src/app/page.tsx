@@ -46,21 +46,16 @@ export default function CuisineCrafterPage() {
   };
 
   const handleGenerate = async () => {
-    if (!selectedCuisine) {
-      setError("Please select a cuisine first.");
-      toast({
-        title: "Missing Cuisine",
-        description: "You need to select a cuisine to generate a recipe.",
-        variant: "destructive",
-      });
-      return;
-    }
     setIsLoading(true);
     setError(null);
     setRecipe(null); 
 
     try {
-      const result = await handleGenerateRecipeAction({ cuisine: selectedCuisine, dishName, ingredients });
+      const result = await handleGenerateRecipeAction({ 
+        cuisine: selectedCuisine || undefined, 
+        dishName, 
+        ingredients 
+      });
       setRecipe(result);
       toast({
         title: "Recipe Generated!",
@@ -133,7 +128,7 @@ export default function CuisineCrafterPage() {
           <div className="text-center">
             <Button
               onClick={handleGenerate}
-              disabled={isLoading || !selectedCuisine}
+              disabled={isLoading}
               size="lg"
               className="px-8 py-6 text-lg rounded-full shadow-lg transform hover:scale-105 transition-transform duration-200"
               aria-live="polite"
