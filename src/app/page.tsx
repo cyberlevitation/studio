@@ -1,8 +1,10 @@
+
 // @/app/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link'; // Added Link
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles, ChefHat } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
@@ -147,8 +149,9 @@ export default function CuisineCrafterPage() {
 
       <footer className="mt-12 py-8 text-center text-sm text-muted-foreground border-t border-border bg-card">
         <p>&copy; {new Date().getFullYear()} CuisineCrafter. All rights reserved.</p>
-        <p>Powered by Generative AI.</p>
+        <p>Powered by Generative AI. Check out our <Link href="/blog" className="text-primary hover:underline">Blog</Link>!</p>
       </footer>
     </div>
   );
 }
+
